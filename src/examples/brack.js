@@ -5,7 +5,8 @@ const cli = Cli();
 cli
   // 使用可变参数作为指令的默认名字
   .command("[...reset]", "Build files")
-  .option("--miniVue", "start mini-vue")
+  // [...reset] 提供一个数组作为选项值
+  .option("--miniVue [...reset]", "start mini-vue")
   .action((files, options) => {
     console.log("files", files);
     console.log("options", options);
