@@ -1,19 +1,18 @@
 /// <reference types="vitest" />
-import { defineConfig, configDefaults } from "vitest/config";
+import { defineConfig } from "vitest/config";
 import AutoComponentImport from "unplugin-auto-import/vite";
-import viteEslint from "vite-plugin-eslint";
+import Vue from "@vitejs/plugin-vue";
 import path from "path";
 export default defineConfig({
   test: {
     includeSource: ['src/**'],
+    environment: 'happy-dom'
   },
   plugins: [
+    Vue(),
     AutoComponentImport({
       imports: [
         "vitest",
-        // {
-        //   "[package_name]": ["[importNames]", ["[from]", "[alias]"]],
-        // },
       ],
       dts: "./auto-import.d.ts",
       eslintrc: {
