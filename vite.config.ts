@@ -6,7 +6,7 @@ import path from "path";
 export default defineConfig({
   test: {
     includeSource: ['src/**'],
-    environment: 'happy-dom'
+    environment: 'jsdom'
   },
   plugins: [
     Vue(),
