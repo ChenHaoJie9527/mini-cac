@@ -6,7 +6,10 @@ import path from "path";
 export default defineConfig({
   test: {
     includeSource: ['src/**'],
-    environment: 'jsdom'
+    environment: 'jsdom',
+    coverage: {
+      reporter: 'none'
+    }
   },
   plugins: [
     Vue(),
