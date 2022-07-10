@@ -69,4 +69,87 @@ plusOne.value++
   3
   ```
 
+
+### 2.挑战：Watch全家桶
+
+使用 侦听器 `Watch` 来完成一下例子：
+
+```vue
+<script setup lang="ts">
+import { ref, watch } from "vue"
+
+const count = ref(0)
+
+/**
+ * 挑战 1: Watch 一次
+ * 确保副作用函数只执行一次
+*/
+watch(count, () => {
+  console.log("Only triggered once")
+})
+
+count.value = 1
+setTimeout(() => count.value = 2)
+
+/**
+ * 挑战 2: Watch 对象
+ * 确保副作用函数被正确触发
+*/
+const state = ref({
+  count: 0,
+})
+
+watch(state, () => {
+  console.log("The state.count updated")
+})
+
+state.value.count = 2
+
+/**
+ * 挑战 3: 副作用函数刷新时机
+ * 确保正确访问到更新后的`eleRef`值
+*/
+
+const eleRef = ref()
+const age = ref(2)
+watch(age, () => {
+  console.log(eleRef.value)
+})
+age.value = 18
+
+</script>
+
+<template>
+  <div>
+    <p>
+      {{ count }}
+    </p>
+    <p ref="eleRef">
+      {{ age }}
+    </p>
+  </div>
+</template>
+```
+
+解题思路：
+
+- watch虽然可以随着组件的卸载而被移除，但是在一些特殊场景，需要手动移除。
+
+- watch 的一些配置选项
+
+  ```ts
+  {
+      immediate: true, // 用于监听响应式对象，true表示初始化后立即调用
+      deep: true, // 强制进入深度监听模式
+      flush: 'post'，// 用于在Watch更新回调里获取最新状态的DOM节点
+  }
+  ```
+
+- 如何手动停止侦听器watch
+
+  ```ts
+  // 手动停止侦听器，可以通过调用watch方法返回的函数
+  const unwatch = watch()
+  ```
+
   
