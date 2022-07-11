@@ -152,4 +152,66 @@ age.value = 18
   const unwatch = watch()
   ```
 
+- ```vue
+  <script setup lang="ts">
+  import { ref, watch } from "vue"
+  
+  const count = ref(0)
+  
+  /**
+   * Challenge 1: Watch once
+   * Make sure the watch callback only triggers once
+  */
+  const unWatch = watch(count, () => {
+    console.log("Only triggered once")
+    // 移除侦听器
+    unWatch()
+  })
+  
+  count.value = 1
+  setTimeout(() => count.value = 2)
+  
+  /**
+   * Challenge 2: Watch object
+   * Make sure the watch callback is triggered
+  */
+  const state = ref({
+    count: 0,
+  })
+  
+  watch(state, () => {
+    console.log("The state.count updated")
+      // deep: true 显式进入深度监听
+  }, {deep: true})
+  
+  state.value.count = 2
+  
+  /**
+   * Challenge 3: Callback Flush Timing
+   * Make sure visited the updated eleRef
+  */
+  
+  const eleRef = ref()
+  const age = ref(2)
+  watch(age, () => {
+    console.log(eleRef.value)
+      // flush 标记 获取最新状态的DOM节点
+  }, {flush: 'post'})
+  age.value = 18
+  
+  </script>
+  
+  <template>
+    <div>
+      <p>
+        {{ count }}
+      </p>
+      <p ref="eleRef">
+        {{ age }}
+      </p>
+    </div>
+  </template>
+  
+  ```
+
   
