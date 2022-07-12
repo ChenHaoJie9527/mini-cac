@@ -1,4 +1,4 @@
-name: CI
+name: CI-CD
 # Event 设置为main分支的 pr 事件
 # main分支相当于master分支，github项目新建是吧main作为默认分支
 
