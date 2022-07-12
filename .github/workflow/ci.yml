@@ -1,0 +1,49 @@
+name: CI
+# Event 设置为main分支的 pr 事件
+# main分支相当于master分支，github项目新建是吧main作为默认分支
+
+# 指定触发的是时间为 pull request 分支是 main
+on:
+  pull_request:
+    branches: main
+jobs:
+  # 定义一个 job 并命名为 CI
+  CI:
+  # 指定 job 在最新版本的 Linux 容器中运行
+    runs-on: ubuntu-latest
+    steps:
+      # 拉取项目代码
+      - name: Checkout repository
+        user: actions/checkout@v2
+      # 给当前环境下载node
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+      with:
+        node-version: "14.x"
+      # 检查缓存
+      # 如果key命中缓存则直接将缓存的文件还原到 path 目录，从而减少流水线运行时间
+      # 若 key 没命中缓存时，在当前 job 成功完成时自动创建一个新的缓存
+      - name: Cache
+        #缓存命中结果存储在steps.[id].outputs.cache-hit里，该变量在后续的step中可读
+        id: cache-dependencies
+        uses: actions/cache@v3 
+        with:
+          # 缓存文件目录的路径
+          path: |
+            **/node_modules
+          # key中定义缓存标志位的生成方式 runner.OS只当前环境的系统 外加对pnpm-lock.yaml内容生成的哈希值作为key值,如果yaml文件改变则表示依赖有变化
+          # 这里用ypnpm-lock.yaml而不是package.json是因为后者中还有version和description之类的描述项目但和依赖无关的属性
+          key: ${{runner.OS}}-${{hashFiles('**/pnpm-lock.yaml')}}
+      # 安装依赖
+      - name: Installing Dependencies
+        # 如果缓存标志位命中 则执行该step 否则跳过
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: pnpm install
+      # 运行代码扫描
+      - name: Running Lint
+        # 执行代格式扫描
+        run: pnpm lint
+      # 运行自动化测试
+      - name: Running Test
+        run: pnpm test
+# Cache步骤中，7 天内未被访问的任何缓存条目将会被删除。 可以存储的缓存数没有限制，但存储库中所有缓存的总大小限制为 10 GB
