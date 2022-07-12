@@ -14,12 +14,12 @@ jobs:
     steps:
       # 拉取项目代码
       - name: Checkout repository
-        user: actions/checkout@v2
+        uses: actions/checkout@v2
       # 给当前环境下载node
       - name: Use Node.js
         uses: actions/setup-node@v3
-      with:
-        node-version: "14.x"
+        with:
+          node-version: "14.x"
       # 检查缓存
       # 如果key命中缓存则直接将缓存的文件还原到 path 目录，从而减少流水线运行时间
       # 若 key 没命中缓存时，在当前 job 成功完成时自动创建一个新的缓存
@@ -46,4 +46,3 @@ jobs:
       # 运行自动化测试
       - name: Running Test
         run: pnpm test
-# Cache步骤中，7 天内未被访问的任何缓存条目将会被删除。 可以存储的缓存数没有限制，但存储库中所有缓存的总大小限制为 10 GB
