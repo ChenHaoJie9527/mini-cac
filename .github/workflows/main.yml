@@ -18,8 +18,8 @@ jobs:
       # 给当前环境下载node
       - name: Use Node.js
         uses: actions/setup-node@v3
-      with:
-        node-version: "14.x"
+        with:
+          node-version: "14.x"
       # 检查缓存
       # 如果key命中缓存则直接将缓存的文件还原到 path 目录，从而减少流水线运行时间
       # 若 key 没命中缓存时，在当前 job 成功完成时自动创建一个新的缓存
