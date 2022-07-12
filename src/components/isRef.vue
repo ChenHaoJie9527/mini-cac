@@ -11,7 +11,7 @@ function useCount() {
   }
 
   return {
-    state: toRefs(state),
+    state: toRefs(state), // 会将响应对象转换成普通对象，普通对象里的每个 property 都是响应对象里的 property 的 ref，即都是经过 toRef创建的
     update,
   };
 }
