@@ -1,4 +1,4 @@
-import Cli from 'cac';
+const Cli = require('cac')
 const cli = Cli();
 
 cli
