@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch } from 'vue';
 
 const count = ref(0);
 
@@ -8,14 +8,14 @@ const count = ref(0);
  * 确保副作用函数只执行一次
  */
 const onceWatch = watch(count, () => {
-  console.log("Only triggered once");
+  console.log('Only triggered once');
   // 手动清除监听器
   onceWatch();
 });
 
 count.value = 1;
 setTimeout(() => (count.value = 2));
-console.log("count.value", count.value);
+console.log('count.value', count.value);
 
 /**
  * 挑战 2: Watch 对象
@@ -28,7 +28,7 @@ const state = ref({
 watch(
   state,
   () => {
-    console.log("The state.count updated");
+    console.log('The state.count updated');
   },
   { deep: true }
 );
@@ -47,7 +47,7 @@ watch(
   () => {
     console.log(eleRef.value);
   },
-  { flush: "post" }
+  { flush: 'post' }
 );
 age.value = 18;
 </script>

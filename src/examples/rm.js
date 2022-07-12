@@ -1,16 +1,16 @@
-import Cli from "cac";
+import Cli from 'cac';
 const cli = Cli();
 
 cli
-  .command("rm <dir>", "remove a dir")
-  .option("-r, --recursive", "Remove recursively")
+  .command('rm <dir>', 'remove a dir')
+  .option('-r, --recursive', 'Remove recursively')
   .action((dir, options) => {
-    console.log("remove " + dir + (options.recursive ? " recursively" : ""));
+    console.log(`remove ${dir}${options.recursive ? ' recursively' : ''}`);
   });
 
 cli.help();
 
-cli.version('1.0.1')
+cli.version('1.0.1');
 
 const parse = cli.parse();
 

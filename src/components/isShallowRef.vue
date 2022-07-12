@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { shallowRef, watch } from "vue";
+import { shallowRef, watch } from 'vue';
 
 const state = shallowRef({ count: 1 });
 
@@ -7,7 +7,7 @@ const state = shallowRef({ count: 1 });
 watch(
   state,
   () => {
-    console.log("State.count Updated");
+    console.log('State.count Updated');
   },
   { deep: true }
 );
