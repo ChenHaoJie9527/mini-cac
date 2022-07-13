@@ -1,4 +1,4 @@
-name: CI
+name: CI-CD
 # Event 设置为main分支的 pr 事件
 # main分支相当于master分支，github项目新建是吧main作为默认分支
 
@@ -14,7 +14,7 @@ jobs:
     steps:
       # 拉取项目代码
       - name: Checkout repository
-        user: actions/checkout@v2
+        uses: actions/checkout@v2
       # 给当前环境下载node
       - name: Use Node.js
         uses: actions/setup-node@v3
@@ -46,4 +46,3 @@ jobs:
       # 运行自动化测试
       - name: Running Test
         run: pnpm test
-# Cache步骤中，7 天内未被访问的任何缓存条目将会被删除。 可以存储的缓存数没有限制，但存储库中所有缓存的总大小限制为 10 GB
