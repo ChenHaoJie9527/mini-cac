@@ -18,22 +18,32 @@ jobs:
       # 给当前环境下载node
       - name: Use Node.js
         uses: actions/setup-node@v3
-      with:
-        node-version: "16.x"
+        with:
+          node-version: 16
+      - uses: pnpm@action-setup@v2.0.1
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
       # 检查缓存
       # 如果key命中缓存则直接将缓存的文件还原到 path 目录，从而减少流水线运行时间
       # 若 key 没命中缓存时，在当前 job 成功完成时自动创建一个新的缓存
       - name: Cache
         #缓存命中结果存储在steps.[id].outputs.cache-hit里，该变量在后续的step中可读
         id: cache-dependencies
-        uses: actions/cache@v3 
+        uses: actions/cache@v3
         with:
           # 缓存文件目录的路径
           path: |
             **/node_modules
           # key中定义缓存标志位的生成方式 runner.OS只当前环境的系统 外加对pnpm-lock.yaml内容生成的哈希值作为key值,如果yaml文件改变则表示依赖有变化
-          # 这里用ypnpm-lock.yaml而不是package.json是因为后者中还有version和description之类的描述项目但和依赖无关的属性
-          key: ${{runner.OS}}-${{hashFiles('**/pnpm-lock.yaml')}}
+          # 这里用pnpm-lock.yaml而不是package.json是因为后者中还有version和description之类的描述项目但和依赖无关的属性
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
       # 安装依赖
       - name: Installing Dependencies
         # 如果缓存标志位命中 则执行该step 否则跳过
