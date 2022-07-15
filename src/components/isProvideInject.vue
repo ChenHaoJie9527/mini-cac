@@ -13,7 +13,7 @@ provide('count', count);
 <!-- -------- 声明周期例子 -->
 <template>
   <div>
-    <Child v-show="visible" />
+    <Child v-if="visible" />
     <button @click="onToggle">Toggle</button>
   </div>
 </template>
