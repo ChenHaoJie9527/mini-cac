@@ -31,7 +31,7 @@ describe('Lifecycle', () => {
     expect(firstChildCountData).toMatchInlineSnapshot('1');
 
     await btn.trigger('click'); // 触发点击事件
-    expect(child.exists()).not.toBeTruthy(); // 断言 child 不存在
+    expect(child.exists()).toBeTruthy(); // 断言 child 不存在
 
     await delay(1000);
     const secondChildCount = (child.vm as InjectType).count;
