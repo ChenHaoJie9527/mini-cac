@@ -306,3 +306,49 @@ state.value = {
 </template>
 ```
 
+### 5.挑战：生命周期
+
+```vue
+// 父组件
+<template>
+  <div>
+    <Child v-if="visible" />
+    <button @click="onToggle">Toggle</button>
+  </div>
+</template>
+<script setup lang="ts">
+import Child from './Child.vue';
+import { provide, ref } from 'vue';
+const visible = ref(true);
+const timer = ref(null);
+const count = ref(0);
+provide('count', count);
+provide('timer', timer);
+const onToggle = () => {
+  visible.value = !visible.value;
+}
+</script>
+// 子组件
+<script setup lang="ts">
+import { onMounted, inject, onUnmounted } from 'vue';
+
+const timer = inject<any>('timer');
+const count = inject<any>('count');
+onMounted(() => {
+  timer.value = window.setInterval(() => {
+    count.value++;
+  }, 1000);
+});
+onUnmounted(() => {
+    // 手动移除计时器
+  clearInterval(timer.value);
+});
+</script>
+
+<template>
+  <div>
+    <p>Child Component: {{ count }}</p>
+  </div>
+</template>
+```
+
