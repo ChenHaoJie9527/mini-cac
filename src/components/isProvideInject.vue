@@ -28,5 +28,4 @@ provide('timer', timer);
 const onToggle = () => {
   visible.value = !visible.value;
 }
-provide;
 </script>
