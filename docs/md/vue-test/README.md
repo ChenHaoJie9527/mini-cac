@@ -471,3 +471,37 @@ describe('should fn', () => {
 });
 ```
 
+#### 7.测试Teleport
+
+例子
+
+```vue
+<template>
+  <Teleport to="body">
+    <span>
+      {{ msg }}
+    </span>
+  </Teleport>
+</template>
+<script setup lang="ts">
+import { Teleport } from 'vue';
+const msg = 'hello vue';
+</script>
+```
+
+测试
+
+```tsx
+import { describe, expect, it } from "vitest";
+import TeleportComponent from "@/components/isTeleport.vue";
+import { mount } from "@vue/test-utils";
+describe('should teleport', () => {
+  it('test teleport', () => {
+    const wrapper = mount(TeleportComponent);
+    // 断言 wrapper 没有 span标签 是因为已经被传送到body 里了
+    expect(wrapper.findComponent('span').exists()).toBe(false);
+    expect(document.querySelector('body')?.innerHTML).toMatchInlineSnapshot('"<span>hello vue</span>"')
+  })
+})
+```
+
