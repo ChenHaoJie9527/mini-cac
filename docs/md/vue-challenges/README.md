@@ -352,3 +352,22 @@ onUnmounted(() => {
 </template>
 ```
 
+### 6.挑战：传送门
+
+例子
+
+```vue
+<template>
+// Teleport 内置组件：会将组件内部的模板 通过to 到指定的DOM节点 appendChild中
+  <Teleport to="body">
+    <span>
+      {{ msg }}
+    </span>
+  </Teleport>
+</template>
+<script setup lang="ts">
+import { Teleport } from 'vue';
+const msg = 'hello vue';
+</script>
+```
+
