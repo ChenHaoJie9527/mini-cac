@@ -107,4 +107,60 @@ cac
   trim_trailing_whitespace = false
   ```
 
-  
+- `gitattributes`
+
+  当执行 git 动作时，.`gitattributes` 文件允许你指定由 git 使用的文件和路径的属性，例如：`git commit` 等。换句话说，每当有文件保存或者创建时，git 会根据指定的属性来自动保存。
+
+  为什么要使用 `.gitattributes`，这是因为在多人开发团队中，无法确定每个人的操作系统、编辑器、IDE等都是一致的。不同的操作系统，默认的文件结尾行就会不同。
+
+  当我们在 .`gitattributes` 设置了属性 
+
+  ```json
+  {
+    "endOfLine": "lf"
+  }
+  ```
+
+  那么在 win上，会看到如下警告
+
+  ![img](https://pic1.zhimg.com/80/v2-7f7615000240d6862bf8875328bbde70_720w.jpg)
+
+  这时候 .`gitattributes` 就排上用场了
+
+  在根目录上创建名为 `.gitattributes` 文件的示例
+
+  ```tex
+  *.js    eol=lf
+  *.jsx   eol=lf
+  *.json  eol=lf
+  ```
+
+  这时候 任何 .js  .jsx .json相关的文件都会生效，当将文件推送到远程仓库后。当有人从仓库中拉取代码后，创建以及修改文件时，git 都会自动的设置好正确的文件结尾。
+
+  虽然 Git 通常不使用文件内容，但是可以将其配置为在存储库中将行结尾标准化为 LF，并且可以选择在签出文件时将其转换为 `CRLF`。
+
+  如果您只是想在工作目录中使用 `CRLF` 行结尾，而不考虑使用的存储库，那么可以设置配置变量“ core.autocrlf”，而不使用任何属性。
+
+  ```
+  [core]
+  	autocrlf = true
+  ```
+
+  如果您希望确保任何贡献者引入到存储库中的文本文件的行尾都是规范化的，那么您可以将所有文件的 text 属性设置为“ auto”。
+
+  ```
+  * text=auto
+  ```
+
+  **增加到已有的 Git 仓库**
+
+  正如上面提到的，在仓库的根目录下创建名为 `.gitattributes` 的文件。一旦文件推送到 git 服务器后，请确保你的本地 仓库是干净的、无需提交的。使用命令 `git status` 可以检查是否你的仓库是干净的。
+
+  **重置 GitAttributes**
+
+  ```
+  git rm --cached -r
+  git reset --hard
+  ```
+
+  上面的命令就会根据文件 `.gitattributes` 中的定义，更新文件的结尾行。任何变更都会自动使用指定文件的文件结尾行格式。下一步，可以通知团队成员或者协作者去执行 Git 属性重置的命令。现在，prettier 就不会在提示有关 CR 的问题了，所有的开发者都可以安心写代码了!
