@@ -505,3 +505,43 @@ describe('should teleport', () => {
 })
 ```
 
+#### 8.测试阻止事件冒泡
+
+例子
+
+```vue
+<template>
+  <div @click="click1">
+    <div @click.stop="click2">click me</div>
+  </div>
+</template>
+<script setup lang="ts">
+const click1 = () => {
+  console.log('click1');
+}
+const click2 = () => {
+  console.log('click2');
+}
+</script>
+```
+
+测试
+
+```tsx
+import { mount } from "@vue/test-utils";
+import { describe, expect, it, vi } from "vitest";
+import isClickStop from "@/components/isClickStop.vue";
+describe('should click.stop', () => {
+  it('stake click.stop', async () => {
+    const list: string[] = [];
+    console.log = vi.fn((val: string) => {
+      list.push(val);
+    });
+    const wrapper = mount(isClickStop);
+    // findAll：查找所有的div元素
+    await wrapper.findAll('div')[1].trigger('click');
+    expect(list.length).toBe(1);
+  })
+})
+```
+

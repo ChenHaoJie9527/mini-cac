@@ -392,3 +392,21 @@ setInterval(() => {
 </style>
 ```
 
+### 3.挑战：阻止事件冒泡
+
+```vue
+<template>
+  <div @click="click1">
+    <div @click.stop="click2">click me</div>
+  </div>
+</template>
+<script setup lang="ts">
+const click1 = () => {
+  console.log('click1');
+}
+const click2 = () => {
+  console.log('click2');
+}
+</script>
+```
+
