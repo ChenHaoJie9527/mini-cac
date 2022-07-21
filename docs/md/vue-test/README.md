@@ -545,3 +545,49 @@ describe('should click.stop', () => {
 })
 ```
 
+#### 9.测试Props验证
+
+例子
+
+```vue
+// 父组件
+<template>
+  <div>
+    <Button type="text" />
+  </div>
+</template>
+<script setup lang="ts">
+import Button from "@/components/Botton.vue";
+</script>
+
+// 子组件
+<template>
+  <button>{{ props.type }}</button>
+</template>
+<script setup lang="ts">
+interface Props {
+  type: 'primary' | 'ghost' | 'dashed' | 'link' | 'text' | 'default';
+}
+const props = withDefaults(defineProps<Props>(), {
+  type: 'default',
+});
+</script>
+```
+
+测试
+
+```tsx
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
+import isPropsValidator from '@/components/isPropsValidator.vue';
+import Button from '@/components/Botton.vue';
+describe('should props', () => {
+  it('test props', () => {
+    const fatherWrapper = mount(isPropsValidator);
+    const child = fatherWrapper.findComponent(Button);
+    expect(child.exists()).toBeTruthy();
+    expect(child.vm.type).toBe('text');
+  });
+});
+```
+
