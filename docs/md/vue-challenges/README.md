@@ -410,3 +410,28 @@ const click2 = () => {
 </script>
 ```
 
+### 4.挑战：Props验证
+
+```vue
+<template>
+  <div>
+    <Button type="text" />
+  </div>
+</template>
+<script setup lang="ts">
+import Button from "@/components/Botton.vue";
+</script>
+
+<template>
+  <button>{{ props.type }}</button>
+</template>
+<script setup lang="ts">
+interface Props {
+  type: 'primary' | 'ghost' | 'dashed' | 'link' | 'text' | 'default';
+}
+const props = withDefaults(defineProps<Props>(), {
+  type: 'default',
+});
+</script>
+```
+
