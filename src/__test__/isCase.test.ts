@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, } from 'vitest';
 import Cli from 'cac';
 const cli = Cli();
 describe('work cac-case', () => {
