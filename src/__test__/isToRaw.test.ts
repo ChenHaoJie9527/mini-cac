@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import isToRaw from '@/components/ToRaw.vue';
 describe('should toRaw API', () => {
   it('take toRaw', () => {
-    let res: string[] = [];
+    const res: string[] = [];
     console.log = vi.fn((log: string) => {
       res.push(log);
     });
