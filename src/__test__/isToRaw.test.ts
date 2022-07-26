@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import isToRaw from '@/components/ToRaw.vue';
+import isToRaw from '@/components/toRaw.vue';
 describe('should toRaw API', () => {
   it('take toRaw', () => {
     const res: string[] = [];
