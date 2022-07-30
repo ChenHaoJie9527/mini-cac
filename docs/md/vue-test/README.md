@@ -669,3 +669,42 @@ describe('EffectScope', () => {
 });
 ```
 
+#### 12.测试useToggle
+
+```vue
+<template>
+  <p>{{ state ? '1' : '2' }}</p>
+  <button @click="() => !isRef(toggle) && toggle()">toggle</button>
+</template>
+<script setup lang="ts">
+import { isRef, ref, unref } from 'vue';
+function useToggle(initialValue = false) {
+  const state = ref(initialValue);
+  function toggle() {
+    // unref: 语法糖，该方法的参数如果是一个ref代理对象，则会自动获取value，否则返回原参数
+    state.value = !unref(state);
+  }
+  return [state, toggle];
+}
+let [state, toggle] = useToggle(false);
+</script>
+```
+
+```ts
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
+import isToggleVue from '@/components/isToggle.vue';
+describe('should toggled', () => {
+  it('test toggled', async () => {
+    const wrapper = mount(isToggleVue);
+    const p = wrapper.find('p');
+    const btn = wrapper.find('button');
+    expect(p.text()).toBe('2');
+    await btn.trigger('click');
+    expect(p.text()).toBe('1');
+    await btn.trigger('click');
+    expect(p.text()).toBe('2');
+  });
+});
+```
+
