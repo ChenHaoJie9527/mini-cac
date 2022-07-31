@@ -37,7 +37,7 @@ function useCounter(initialValue = 0, options: UseCounterOptions = {}) {
  * 第二个参数为区间配置参数
  * 最大值不能 > 11 最小值不能 < 5
  */
-const { count, inc, dec, reset } = useCounter(6, { min: 5, max: 11 });
+const { count, inc, dec, reset } = useCounter(0, { min: 0, max: 11 });
 </script>
 
 <template>
