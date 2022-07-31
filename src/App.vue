@@ -3,6 +3,7 @@ import ButtonSlot from '@/components/ButtonSlot.vue';
 import isWatch from '@/components/isWatch.vue';
 import isShallowRefVue from './components/isShallowRef.vue';
 import isToggleVue from './components/isToggle.vue';
+import useCounter from '@/components/useCounter.vue';
 </script>
 
 <template>
@@ -11,4 +12,5 @@ import isToggleVue from './components/isToggle.vue';
   <isWatch />
   <isShallowRefVue />
   <isToggleVue />
+  <useCounter />
 </template>
