@@ -4,6 +4,7 @@ import isWatch from '@/components/isWatch.vue';
 import isShallowRefVue from './components/isShallowRef.vue';
 import isToggleVue from './components/isToggle.vue';
 import useCounter from '@/components/useCounter.vue';
+import useLocalStorage from '@/components/useLocalStorage.vue';
 </script>
 
 <template>
@@ -13,4 +14,5 @@ import useCounter from '@/components/useCounter.vue';
   <isShallowRefVue />
   <isToggleVue />
   <useCounter />
+  <useLocalStorage />
 </template>
