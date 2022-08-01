@@ -708,3 +708,107 @@ describe('should toggled', () => {
 });
 ```
 
+#### 13.测试useCounter
+
+例子
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+interface UseCounterOptions {
+  min?: number;
+  max?: number;
+}
+
+function useCounter(initialValue = 0, options: UseCounterOptions = {}) {
+  const count = ref(initialValue);
+  // Infinity 无穷大
+  // -Infinity 无穷小
+  const { max = Infinity, min = -Infinity } = options;
+  // + 法
+  function inc(val = 1) {
+    // Math.min 比较数值中最小的数。如果任一参数不能转换为数值，则返回NaN
+    return (count.value = Math.min(max, count.value + val));
+  }
+  // - 法
+  function dec(val = 1) {
+    // 返回给定的一组数字中的最大值。如果给定的参数中至少有一个参数无法被转换成数字，则会返回 NaN
+    return (count.value = Math.max(min, count.value - val));
+  }
+  // 重置
+  function reset(val = initialValue) {
+    return (count.value = val);
+  }
+
+  return {
+    inc,
+    dec,
+    reset,
+    count,
+  };
+}
+/**
+ * 第一个参数为默认起始值
+ * 第二个参数为区间配置参数
+ * 最大值不能 > 11 最小值不能 < 5
+ */
+const { count, inc, dec, reset } = useCounter(0, { min: 0, max: 11 });
+</script>
+
+<template>
+  <p>Count: {{ count }}</p>
+  <button @click="inc()">inc</button>
+  <button @click="dec()">dec</button>
+  <button @click="reset()">reset</button>
+</template>
+```
+
+测试
+
+```tsx
+import { DOMWrapper, mount } from '@vue/test-utils';
+import { beforeEach, describe, expect, it } from 'vitest';
+import useCounter from '@/components/useCounter.vue';
+describe('should useCounter', () => {
+  let wrapper,
+    incBtn: DOMWrapper<HTMLButtonElement>,
+    decBtn: DOMWrapper<HTMLButtonElement>,
+    text: DOMWrapper<HTMLParagraphElement>;
+  // let text: DOMWrapper<HTMLParagraphElement> | string = '';
+  // beforeEach: 注册一个回调,在当前上下文中的每个测试运行之前被调用, 即每个测试前都会调用该回调函数
+  beforeEach(() => {
+    wrapper = mount(useCounter);
+    incBtn = wrapper.findAll('button')[0];
+    decBtn = wrapper.findAll('button')[1];
+    text = wrapper.find('p');
+  });
+
+  // 第一个测试
+  it('should work', async () => {
+    expect(text.text()).toBe('Count: 0');
+    // 点击加法4下
+    await triggerClick(incBtn, 4);
+    expect(text.text()).toBe('Count: 4');
+    // 点击减法2下
+    await triggerClick(decBtn, 2)
+    expect(text.text()).toBe('Count: 2');
+  });
+
+  it('support min and max', async () => {
+    expect(text.text()).toBe('Count: 0');
+    await triggerClick(incBtn, 15);
+    // 测试最大值 由于max: 10, 所以点击15下 还是11
+    expect(text.text()).toBe('Count: 11')
+    await triggerClick(decBtn, 20);
+    // 测试最小值 由于min: 0 所以点击20下 还是0
+    expect(text.text()).toBe('Count: 0')
+  });
+});
+
+async function triggerClick(el: DOMWrapper<HTMLButtonElement>, timer = 1) {
+  for (let i = 0; i < timer; i++) {
+    await el.trigger('click');
+  }
+}
+```
+
