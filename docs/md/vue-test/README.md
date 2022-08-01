@@ -708,3 +708,182 @@ describe('should toggled', () => {
 });
 ```
 
+#### 13.测试useCounter
+
+例子
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+interface UseCounterOptions {
+  min?: number;
+  max?: number;
+}
+
+function useCounter(initialValue = 0, options: UseCounterOptions = {}) {
+  const count = ref(initialValue);
+  // Infinity 无穷大
+  // -Infinity 无穷小
+  const { max = Infinity, min = -Infinity } = options;
+  // + 法
+  function inc(val = 1) {
+    // Math.min 比较数值中最小的数。如果任一参数不能转换为数值，则返回NaN
+    return (count.value = Math.min(max, count.value + val));
+  }
+  // - 法
+  function dec(val = 1) {
+    // 返回给定的一组数字中的最大值。如果给定的参数中至少有一个参数无法被转换成数字，则会返回 NaN
+    return (count.value = Math.max(min, count.value - val));
+  }
+  // 重置
+  function reset(val = initialValue) {
+    return (count.value = val);
+  }
+
+  return {
+    inc,
+    dec,
+    reset,
+    count,
+  };
+}
+/**
+ * 第一个参数为默认起始值
+ * 第二个参数为区间配置参数
+ * 最大值不能 > 11 最小值不能 < 5
+ */
+const { count, inc, dec, reset } = useCounter(0, { min: 0, max: 11 });
+</script>
+
+<template>
+  <p>Count: {{ count }}</p>
+  <button @click="inc()">inc</button>
+  <button @click="dec()">dec</button>
+  <button @click="reset()">reset</button>
+</template>
+```
+
+测试
+
+```tsx
+import { DOMWrapper, mount } from '@vue/test-utils';
+import { beforeEach, describe, expect, it } from 'vitest';
+import useCounter from '@/components/useCounter.vue';
+describe('should useCounter', () => {
+  let wrapper,
+    incBtn: DOMWrapper<HTMLButtonElement>,
+    decBtn: DOMWrapper<HTMLButtonElement>,
+    text: DOMWrapper<HTMLParagraphElement>;
+  // let text: DOMWrapper<HTMLParagraphElement> | string = '';
+  // beforeEach: 注册一个回调,在当前上下文中的每个测试运行之前被调用, 即每个测试前都会调用该回调函数
+  beforeEach(() => {
+    wrapper = mount(useCounter);
+    incBtn = wrapper.findAll('button')[0];
+    decBtn = wrapper.findAll('button')[1];
+    text = wrapper.find('p');
+  });
+
+  // 第一个测试
+  it('should work', async () => {
+    expect(text.text()).toBe('Count: 0');
+    // 点击加法4下
+    await triggerClick(incBtn, 4);
+    expect(text.text()).toBe('Count: 4');
+    // 点击减法2下
+    await triggerClick(decBtn, 2)
+    expect(text.text()).toBe('Count: 2');
+  });
+
+  it('support min and max', async () => {
+    expect(text.text()).toBe('Count: 0');
+    await triggerClick(incBtn, 15);
+    // 测试最大值 由于max: 10, 所以点击15下 还是11
+    expect(text.text()).toBe('Count: 11')
+    await triggerClick(decBtn, 20);
+    // 测试最小值 由于min: 0 所以点击20下 还是0
+    expect(text.text()).toBe('Count: 0')
+  });
+});
+
+async function triggerClick(el: DOMWrapper<HTMLButtonElement>, timer = 1) {
+  for (let i = 0; i < timer; i++) {
+    await el.trigger('click');
+  }
+}
+```
+
+#### 14.测试until
+
+例子
+
+```vue
+<script setup lang="ts">
+import { ref, Ref } from 'vue';
+
+const count = ref(0);
+
+/**
+ * 利用async await语法糖特性 会返回Promise then的回调结果
+ * toBe 形成闭包 对initial有引用 所以在调用toBe时，将参数赋值给initial 并resolve出去
+ */
+
+function until(initial: Ref<number>) {
+  function toBe(value: number) {
+    return new Promise(resolve => {
+      initial.value = value;
+      resolve(initial.value);
+    });
+  }
+
+  return {
+    toBe,
+  };
+}
+
+async function increase() {
+  count.value = 0;
+  setInterval(() => {
+    count.value++;
+  }, 1000);
+  await until(count).toBe(3);
+  console.log(count.value === 3); // Make sure the output is true
+}
+</script>
+
+<template>
+  <p @click="increase">Increase</p>
+</template>
+```
+
+测试
+
+```tsx
+import { mount } from '@vue/test-utils';
+import { describe, expect, it, vi } from 'vitest';
+import until from '@/components/until.vue';
+describe('should until', () => {
+  it('test until', async () => {
+    const arr: string[] = [];
+    console.log = vi.fn(log => {
+      arr.push(log);
+    });
+    const wrapper = mount(until);
+    const p = wrapper.find('p');
+    expect(p.exists()).toBeTruthy();
+    await p.trigger('click');
+    /**
+     * 之所以delay 4000，是因为在increase函数里 count是从0开始的，所以只有到4s的时候， count才为3
+     * 当count 为 3 的时候，console.log(count.value === 3) 才成立
+     */
+    delay(400);
+    expect(JSON.stringify(arr)).toBe('[true]');
+  });
+});
+
+function delay(timer: number) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timer);
+  });
+}
+```
+

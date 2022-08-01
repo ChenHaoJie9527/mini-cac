@@ -6,8 +6,6 @@
 
 [TOC]
 
-
-
 ### 1.挑战：可写的计算属性
 
 创建一个可写的计算属性，使得下列的例子得到预期的正确答案
@@ -72,7 +70,6 @@ plusOne.value++
   2
   3
   ```
-
 
 ### 2.挑战：Watch全家桶
 
@@ -218,7 +215,6 @@ age.value = 18
   
   ```
 
-
 ### 3.挑战：refs 使用
 
 例子
@@ -280,13 +276,13 @@ watch(
 );
 
 /**
- * 请注意，虽然在视图上能够看到count已经被修改了，但是并不会触发Wath，这是执行同步代码后，直接先于watch进入	到 effect 去了，导致在视图上看起来已经赋值成功了
+ * 请注意，虽然在视图上能够看到count已经被修改了，但是并不会触发Wath，这是执行同步代码后，直接先于watch进入 到 effect 去了，导致在视图上看起来已经赋值成功了
  然后如果在异步代码中执行一下的代码，并不会触发视图的更新
  所以要考虑同步和异步的问题
 */
 // 不会更新
 //Promise.resolve().then(() => {
-//	state.value.count = 2; // 不会被触发更改
+// state.value.count = 2; // 不会被触发更改
 //});
 
 // 同步代码会更新
@@ -521,5 +517,99 @@ function useToggle(initialValue = false) {
 }
 let [state, toggle] = useToggle(false);
 </script>
+```
+
+### 8.挑战：useCounter
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+interface UseCounterOptions {
+  min?: number;
+  max?: number;
+}
+
+function useCounter(initialValue = 0, options: UseCounterOptions = {}) {
+  const count = ref(initialValue);
+  // Infinity 无穷大
+  // -Infinity 无穷小
+  const { max = Infinity, min = -Infinity } = options;
+  // + 法
+  function inc(val = 1) {
+    // Math.min 比较数值中最小的数。如果任一参数不能转换为数值，则返回NaN
+    return (count.value = Math.min(max, count.value + val));
+  }
+  // - 法
+  function dec(val = 1) {
+    // 返回给定的一组数字中的最大值。如果给定的参数中至少有一个参数无法被转换成数字，则会返回 NaN
+    return (count.value = Math.max(min, count.value - val));
+  }
+  // 重置
+  function reset(val = initialValue) {
+    return (count.value = val);
+  }
+
+  return {
+    inc,
+    dec,
+    reset,
+    count,
+  };
+}
+/**
+ * 第一个参数为默认起始值
+ * 第二个参数为区间配置参数
+ * 最大值不能 > 11 最小值不能 < 5
+ */
+const { count, inc, dec, reset } = useCounter(0, { min: 0, max: 11 });
+</script>
+
+<template>
+  <p>Count: {{ count }}</p>
+  <button @click="inc()">inc</button>
+  <button @click="dec()">dec</button>
+  <button @click="reset()">reset</button>
+</template>
+```
+
+### 9.挑战：until
+
+```vue
+<script setup lang="ts">
+import { ref, Ref } from 'vue';
+
+const count = ref(0);
+
+/**
+ * 利用async await语法糖特性 会返回Promise then的回调结果
+ * toBe 形成闭包 对initial有引用 所以在调用toBe时，将参数赋值给initial 并resolve出去
+ */
+
+function until(initial: Ref<number>) {
+  function toBe(value: number) {
+    return new Promise(resolve => {
+      initial.value = value;
+      resolve(initial.value);
+    });
+  }
+
+  return {
+    toBe,
+  };
+}
+
+async function increase() {
+  count.value = 0;
+  setInterval(() => {
+    count.value++;
+  }, 1000);
+  await until(count).toBe(3);
+  console.log(count.value === 3); // Make sure the output is true
+}
+</script>
+
+<template>
+  <p @click="increase">Increase</p>
+</template>
 ```
 

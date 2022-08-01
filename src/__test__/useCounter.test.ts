@@ -29,7 +29,7 @@ describe('should useCounter', () => {
   it('support min and max', async () => {
     expect(text.text()).toBe('Count: 0');
     await triggerClick(incBtn, 15);
-    // 测试最大值 由于max: 10, 所以点击15下 还是10
+    // 测试最大值 由于max: 10, 所以点击15下 还是11
     expect(text.text()).toBe('Count: 11')
     await triggerClick(decBtn, 20);
     // 测试最小值 由于min: 0 所以点击20下 还是0
