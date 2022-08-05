@@ -230,13 +230,13 @@ watch(
 );
 
 /**
- * 请注意，虽然在视图上能够看到count已经被修改了，但是并不会触发Wath，这是执行同步代码后，直接先于watch进入	到 effect 去了，导致在视图上看起来已经赋值成功了
+ * 请注意，虽然在视图上能够看到count已经被修改了，但是并不会触发Wath，这是执行同步代码后，直接先于watch进入 到 effect 去了，导致在视图上看起来已经赋值成功了
  然后如果在异步代码中执行一下的代码，并不会触发视图的更新
  所以要考虑同步和异步的问题
 */
 // 不会更新
 //Promise.resolve().then(() => {
-//	state.value.count = 2; // 不会被触发更改
+// state.value.count = 2; // 不会被触发更改
 //});
 
 // 同步代码会更新
@@ -960,3 +960,51 @@ describe('should useLocalStorages', () => {
 })
 ```
 
+#### 16.测试 useFocus
+
+例子
+
+```vue
+<script setup lang="ts">
+import { ref, Ref } from 'vue';
+
+const state = ref(true);
+
+/**
+ * Implement the custom directive
+ * Make sure the input element focuses/blurs when the 'state' is toggled
+ *
+ */
+/**
+ * 一个自定义指令被定义为一个包含类似于组件的生命周期钩子的对象 钩子接收指令绑定到的元素
+ * 在 <script setup> 中，任何以 v 开头的驼峰式命名的变量都可以被用作一个自定义指令。在上面的例子中，vFocus 即可以在模板中以 v-focus 的形式使用
+ * 文档地址：https://staging-cn.vuejs.org/guide/reusability/custom-directives.html#introduce
+ */
+const VFocus = {
+  mounted(el: any, binding: { value: any }, vnode: any, prevVnode: any) {
+    const input = el;
+    const res: Ref<any> = ref(binding.value);
+    if (res.value) {
+      input.focus();
+    }
+  },
+  updated(el: any, binding: { value: any }, vnode: any, prevVnode: any) {
+    const input: HTMLInputElement = el;
+    const res: Ref<any> = ref(binding.value);
+    if (res.value) {
+      input.focus();
+    } else {
+      input.blur();
+    }
+  },
+};
+
+setInterval(() => {
+  state.value = !state.value;
+}, 2000);
+</script>
+
+<template>
+  <input v-focus="state" type="text" />
+</template>
+```
