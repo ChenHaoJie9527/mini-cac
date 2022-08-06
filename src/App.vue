@@ -6,6 +6,7 @@ import isToggleVue from './components/isToggle.vue';
 import useCounter from '@/components/useCounter.vue';
 import useLocalStorage from '@/components/useLocalStorage.vue';
 import useFocusVue from './components/useFocus.vue';
+import useDebounceVue from './components/useDebounce.vue';
 </script>
 
 <template>
@@ -17,4 +18,5 @@ import useFocusVue from './components/useFocus.vue';
   <useCounter />
   <useLocalStorage />
   <useFocusVue />
+  <useDebounceVue />
 </template>
