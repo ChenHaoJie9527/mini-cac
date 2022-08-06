@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref, Ref } from 'vue';
+import { computed, ref, Ref } from 'vue';
 
-const state = ref(true);
+const state = ref(false);
+const value = computed(() => {
+  return state.value ? 1 : 2;
+});
 
 /**
  * Implement the custom directive
@@ -14,13 +17,13 @@ const state = ref(true);
  * 文档地址：https://staging-cn.vuejs.org/guide/reusability/custom-directives.html#introduce
  */
 const VFocus = {
-  mounted(el: any, binding: { value: any }, vnode: any, prevVnode: any) {
-    const input = el;
-    const res: Ref<any> = ref(binding.value);
-    if (res.value) {
-      input.focus();
-    }
-  },
+  // mounted(el: any, binding: { value: any }, vnode: any, prevVnode: any) {
+  //   const input = el;
+  //   const res: Ref<any> = ref(binding.value);
+  //   if (res.value) {
+  //     input.focus();
+  //   }
+  // },
   updated(el: any, binding: { value: any }, vnode: any, prevVnode: any) {
     const input: HTMLInputElement = el;
     const res: Ref<any> = ref(binding.value);
@@ -38,5 +41,5 @@ setInterval(() => {
 </script>
 
 <template>
-  <input v-focus="state" type="text" />
+  <input v-focus="state" type="text" :value="value" />
 </template>
