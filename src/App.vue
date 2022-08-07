@@ -7,6 +7,7 @@ import useCounter from '@/components/useCounter.vue';
 import useLocalStorage from '@/components/useLocalStorage.vue';
 import useFocusVue from './components/useFocus.vue';
 import useDebounceVue from './components/useDebounce.vue';
+import useFuncnalComponentVue from './components/useFuncnalComponent.vue';
 </script>
 
 <template>
@@ -19,4 +20,5 @@ import useDebounceVue from './components/useDebounce.vue';
   <useLocalStorage />
   <useFocusVue />
   <useDebounceVue />
+  <useFuncnalComponentVue />
 </template>
