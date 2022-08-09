@@ -8,6 +8,7 @@ import useLocalStorage from '@/components/useLocalStorage.vue';
 import useFocusVue from './components/useFocus.vue';
 import useDebounceVue from './components/useDebounce.vue';
 import useFuncnalComponentVue from './components/useFuncnalComponent.vue';
+import useMouseVue from './components/useMouse.vue';
 </script>
 
 <template>
@@ -21,4 +22,5 @@ import useFuncnalComponentVue from './components/useFuncnalComponent.vue';
   <useFocusVue />
   <useDebounceVue />
   <useFuncnalComponentVue />
+  <useMouseVue />
 </template>
