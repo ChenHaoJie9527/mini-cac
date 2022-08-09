@@ -9,6 +9,7 @@ import useFocusVue from './components/useFocus.vue';
 import useDebounceVue from './components/useDebounce.vue';
 import useFuncnalComponentVue from './components/useFuncnalComponent.vue';
 import useMouseVue from './components/useMouse.vue';
+import h from '@/components/h.vue';
 </script>
 
 <template>
@@ -23,4 +24,5 @@ import useMouseVue from './components/useMouse.vue';
   <useDebounceVue />
   <useFuncnalComponentVue />
   <useMouseVue />
+  <h />
 </template>
