@@ -1,6 +1,4 @@
-<template>
-  <div>Mouse position is at: {{ x }}, {{ y }}</div>
-</template>
+<template>Mouse position is at: {{ x }}, {{ y }}</template>
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from 'vue';
 
@@ -18,7 +16,6 @@ function useEventListener<T extends keyof HTMLElementEventMap>(
     target.removeEventListener(event, callback);
   });
 }
-
 
 function useMouse() {
   const x = ref(0);
