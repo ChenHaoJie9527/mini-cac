@@ -10,6 +10,7 @@ import useDebounceVue from './components/useDebounce.vue';
 import useFuncnalComponentVue from './components/useFuncnalComponent.vue';
 import useMouseVue from './components/useMouse.vue';
 import h from '@/components/h.vue';
+import useClickAndKeyword from '@/components/useClickAndKeyword.vue';
 </script>
 
 <template>
@@ -25,4 +26,5 @@ import h from '@/components/h.vue';
   <useFuncnalComponentVue />
   <useMouseVue />
   <h />
+  <useClickAndKeyword />
 </template>
