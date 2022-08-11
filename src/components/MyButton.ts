@@ -1,19 +1,44 @@
-import { h, FunctionalComponent } from 'vue';
+// import { h, FunctionalComponent } from 'vue';
 
-const MyButton: FunctionalComponent<{ disabled: boolean }> = ({ disabled }, { emit, slots }) => {
-  console.log('slots', slots);
-  return h(
-    'button',
-    {
-      disabled,
+// 纯函数版本
+// const MyButton: FunctionalComponent<{ disabled: boolean }> = ({ disabled }, { emit, slots }) => {
+//   console.log('slots', slots);
+//   return h(
+//     'button',
+//     {
+//       disabled,
+//       onClick: (event: HTMLButtonElement) => {
+//         emit('customClick', event);
+//       },
+//     },
+//     slots.default!()
+//   );
+// };
+// MyButton.props = ['disabled'];
+// MyButton.emits = ['customClick'];
+
+// export default MyButton;
+
+// render函数版本
+import { defineComponent, h } from 'vue';
+
+const myButton = defineComponent({
+  name: 'MyButton',
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  emits: ['customClick'],
+  render() {
+    return h('button', {
+      disabled: this.$props.disabled,
       onClick: (event: HTMLButtonElement) => {
-        emit('customClick', event);
-      },
-    },
-    slots.default!()
-  );
-};
-MyButton.props = ['disabled'];
-MyButton.emits = ['customClick'];
+        this.$emit('customClick', event);
+      }
+    }, this.$slots)
+  }
+});
 
-export default MyButton;
+export default myButton;
