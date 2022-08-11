@@ -3,7 +3,7 @@
 </template>
 <script lang="ts" setup>
 import MyButton from '@/components/MyButton';
-const customClick = (event: HTMLButtonElement) => {
-  console.log('event', event);
+const customClick = () => {
+  console.log('onClick');
 };
 </script>

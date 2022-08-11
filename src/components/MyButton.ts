@@ -34,8 +34,8 @@ const myButton = defineComponent({
   render() {
     return h('button', {
       disabled: this.$props.disabled,
-      onClick: (event: HTMLButtonElement) => {
-        this.$emit('customClick', event);
+      onClick: () => {
+        this.$emit('customClick');
       }
     }, this.$slots)
   }
