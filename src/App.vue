@@ -13,6 +13,7 @@ import h from '@/components/h.vue';
 import useClickAndKeyword from '@/components/useClickAndKeyword.vue';
 import useCustomElement from '@/components/useCustomElement.vue';
 import customRef from '@/components/customRef.vue';
+import VModels from '@/components/VModels.vue';
 </script>
 
 <template>
@@ -31,4 +32,5 @@ import customRef from '@/components/customRef.vue';
   <useClickAndKeyword />
   <useCustomElement />
   <customRef />
+  <VModels />
 </template>
