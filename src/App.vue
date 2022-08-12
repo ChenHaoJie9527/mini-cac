@@ -11,6 +11,7 @@ import useFuncnalComponentVue from './components/useFuncnalComponent.vue';
 import useMouseVue from './components/useMouse.vue';
 import h from '@/components/h.vue';
 import useClickAndKeyword from '@/components/useClickAndKeyword.vue';
+import useCustomElement from '@/components/useCustomElement.vue';
 </script>
 
 <template>
@@ -27,4 +28,5 @@ import useClickAndKeyword from '@/components/useClickAndKeyword.vue';
   <useMouseVue />
   <h />
   <useClickAndKeyword />
+  <useCustomElement />
 </template>
