@@ -822,3 +822,100 @@ const { x, y } = useMouse();
 <style></style>
 ```
 
+### 14.全局选择器 :global
+
+```vue
+<template>
+  <p>Hello Vue.js</p>
+</template>
+
+<style scoped>
+p {
+  font-size: 20px;
+  color: red;
+  text-align: center;
+  line-height: 50px;
+}
+
+/*
+  :global 伪类选择器 全局选择器 可以在局部组件中使用该伪类影响全局的某个元素
+  文档地址：https://staging-cn.vuejs.org/api/sfc-css-features.html#scoped-css
+*/
+:global(body) {
+  width: 100vw;
+  height: 100vh;
+  background-color: burlywood;
+}
+</style>
+```
+
+### 15. h 渲染函数
+
+父组件 引用 h函数返回的VNode
+
+文档：https://staging-cn.vuejs.org/api/render-function.html#h
+
+```vue
+<template>
+  <MyButton :disabled="false" @customClick="customClick">MyButton</MyButton>
+</template>
+<script lang="ts" setup>
+import MyButton from '@/components/MyButton';
+const customClick = () => {
+  console.log('onClick');
+};
+</script>
+```
+
+使用 h 函数 渲染的 组件 MyButton
+
+```ts
+import { defineComponent, h } from 'vue';
+
+const myButton = defineComponent({
+  name: 'MyButton',
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  emits: ['customClick'],
+  render() {
+    return h('button', {
+      disabled: this.$props.disabled,
+      onClick: () => {
+        this.$emit('customClick');
+      }
+    }, this.$slots)
+  }
+});
+
+export default myButton;te
+```
+
+使用 render 函数渲染的组件 MyButton
+
+```ts
+import { h, FunctionalComponent } from 'vue';
+
+// 纯函数版本
+const MyButton: FunctionalComponent<{ disabled: boolean }> = ({ disabled }, { emit, slots }) => {
+  console.log('slots', slots);
+  return h(
+    'button',
+    {
+      disabled,
+      onClick: (event: HTMLButtonElement) => {
+        emit('customClick', event);
+      },
+    },
+    slots.default!()
+  );
+};
+MyButton.props = ['disabled'];
+MyButton.emits = ['customClick'];
+
+export default MyButton;
+```
+
