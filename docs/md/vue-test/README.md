@@ -1181,3 +1181,149 @@ describe('should useMouseMove', () => {
 });
 ```
 
+#### 19.测试 :globalCss
+
+全局选择器
+
+例子
+
+```vue
+<template>
+  <p>Hello Vue.js</p>
+</template>
+
+<style scoped>
+p {
+  font-size: 20px;
+  color: red;
+  text-align: center;
+  line-height: 50px;
+}
+
+/*
+  :global 伪类选择器 全局选择器 可以在局部组件中使用该伪类影响全局的某个元素
+  文档地址：https://staging-cn.vuejs.org/api/sfc-css-features.html#scoped-css
+*/
+:global(body) {
+  width: 100vw;
+  height: 100vh;
+  background-color: burlywood;
+}
+</style>
+```
+
+#### 20.测试 h 函数
+
+例子
+
+```vue
+// 父组件
+<template>
+  <MyButton :disabled="false" @customClick="customClick">MyButton</MyButton>
+</template>
+<script lang="ts" setup>
+import MyButton from '@/components/MyButton';
+const customClick = () => {
+  console.log('onClick');
+};
+</script>
+```
+
+使用纯函数实现的MyButton
+
+```tsx
+import { defineComponent, h } from 'vue';
+
+const myButton = defineComponent({
+  name: 'MyButton',
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  emits: ['customClick'],
+  render() {
+    return h('button', {
+      disabled: this.$props.disabled,
+      onClick: () => {
+        this.$emit('customClick');
+      }
+    }, this.$slots)
+  }
+});
+
+export default myButton;te
+```
+
+使用 render 函数实现的MyButton
+
+```tsx
+import { h, FunctionalComponent } from 'vue';
+
+// 纯函数版本
+const MyButton: FunctionalComponent<{ disabled: boolean }> = ({ disabled }, { emit, slots }) => {
+  console.log('slots', slots);
+  return h(
+    'button',
+    {
+      disabled,
+      onClick: (event: HTMLButtonElement) => {
+        emit('customClick', event);
+      },
+    },
+    slots.default!()
+  );
+};
+MyButton.props = ['disabled'];
+MyButton.emits = ['customClick'];
+
+export default MyButton;
+```
+
+测试例子
+
+```tsx
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
+import FunctionComponent from '@/components/h.vue';
+describe('should function h()', () => {
+  it("renders a 'MyButton'", () => {
+    const wrapper = mount(FunctionComponent);
+    // 包裹器的根 DOM 节点下的标签名，即判断当前组件中是否存在 button 标签名
+    expect(wrapper.element.tagName.toLocaleLowerCase()).toBe('button');
+  });
+
+  it('test props disabled', async () => {
+    const wrapper = mount(FunctionComponent, {
+      props: {
+        disabled: true,
+      },
+    });
+    // attributes：返回 Wrapper DOM 节点的特性对象
+    expect(wrapper.find('button').attributes()).toBeDefined();
+
+    await wrapper.trigger('click');
+    // emitted：返回一个包含由 Wrapper vm 触发的自定义事件的对象
+    expect(wrapper.emitted('click')).toBeUndefined();
+  });
+
+  it('slot', () => {
+    const wrapper = mount(FunctionComponent, {
+      slots: {
+        default: 'MyButton',
+      },
+    });
+    expect(wrapper.text()).toBe('MyButton');
+  });
+
+  it('custom click defined', () => {
+    const wrapper = mount(FunctionComponent);
+    wrapper.trigger('click');
+    expect(
+      wrapper.emitted().customClick || wrapper.emitted()['custom-click']
+    ).toBe(undefined);
+  })
+});
+```
+
