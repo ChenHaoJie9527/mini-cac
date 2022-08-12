@@ -14,6 +14,7 @@ import useClickAndKeyword from '@/components/useClickAndKeyword.vue';
 import useCustomElement from '@/components/useCustomElement.vue';
 import customRef from '@/components/customRef.vue';
 import VModels from '@/components/VModels.vue';
+import TreeComponent from '@/components/TreeComponent.vue';
 </script>
 
 <template>
@@ -33,4 +34,5 @@ import VModels from '@/components/VModels.vue';
   <useCustomElement />
   <customRef />
   <VModels />
+  <TreeComponent />
 </template>
