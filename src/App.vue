@@ -12,6 +12,7 @@ import useMouseVue from './components/useMouse.vue';
 import h from '@/components/h.vue';
 import useClickAndKeyword from '@/components/useClickAndKeyword.vue';
 import useCustomElement from '@/components/useCustomElement.vue';
+import customRef from '@/components/customRef.vue';
 </script>
 
 <template>
@@ -29,4 +30,5 @@ import useCustomElement from '@/components/useCustomElement.vue';
   <h />
   <useClickAndKeyword />
   <useCustomElement />
+  <customRef />
 </template>
