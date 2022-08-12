@@ -780,3 +780,166 @@ function toggle(index: number) {
 </style>
 ```
 
+### 13.挑战：useMouse
+
+```vue
+<template>Mouse position is at: {{ x }}, {{ y }}</template>
+<script lang="ts" setup>
+import { onMounted, onUnmounted, ref } from 'vue';
+
+function useEventListener<T extends keyof HTMLElementEventMap>(
+  target: HTMLElement,
+  event: T,
+  callback: (this: HTMLElement, ev: HTMLElementEventMap[T]) => void
+) {
+  // 组件挂载时绑定事件
+  onMounted(() => {
+    target.addEventListener(event, callback);
+  });
+  // 组件卸载时移除事件
+  onUnmounted(() => {
+    target.removeEventListener(event, callback);
+  });
+}
+
+function useMouse() {
+  const x = ref(0);
+  const y = ref(0);
+
+  useEventListener(window, 'mousemove', event => {
+    x.value = event.pageX;
+    y.value = event.pageY;
+  });
+
+  return {
+    x,
+    y,
+  };
+}
+
+const { x, y } = useMouse();
+</script>
+<style></style>
+```
+
+### 14.全局选择器 :global
+
+```vue
+<template>
+  <p>Hello Vue.js</p>
+</template>
+
+<style scoped>
+p {
+  font-size: 20px;
+  color: red;
+  text-align: center;
+  line-height: 50px;
+}
+
+/*
+  :global 伪类选择器 全局选择器 可以在局部组件中使用该伪类影响全局的某个元素
+  文档地址：https://staging-cn.vuejs.org/api/sfc-css-features.html#scoped-css
+*/
+:global(body) {
+  width: 100vw;
+  height: 100vh;
+  background-color: burlywood;
+}
+</style>
+```
+
+### 15. h 渲染函数
+
+父组件 引用 h函数返回的VNode
+
+文档：https://staging-cn.vuejs.org/api/render-function.html#h
+
+```vue
+<template>
+  <MyButton :disabled="false" @customClick="customClick">MyButton</MyButton>
+</template>
+<script lang="ts" setup>
+import MyButton from '@/components/MyButton';
+const customClick = () => {
+  console.log('onClick');
+};
+</script>
+```
+
+使用 h 函数 渲染的 组件 MyButton
+
+```ts
+import { defineComponent, h } from 'vue';
+
+const myButton = defineComponent({
+  name: 'MyButton',
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  emits: ['customClick'],
+  render() {
+    return h('button', {
+      disabled: this.$props.disabled,
+      onClick: () => {
+        this.$emit('customClick');
+      }
+    }, this.$slots)
+  }
+});
+
+export default myButton;te
+```
+
+使用 render 函数渲染的组件 MyButton
+
+```ts
+import { h, FunctionalComponent } from 'vue';
+
+// 纯函数版本
+const MyButton: FunctionalComponent<{ disabled: boolean }> = ({ disabled }, { emit, slots }) => {
+  console.log('slots', slots);
+  return h(
+    'button',
+    {
+      disabled,
+      onClick: (event: HTMLButtonElement) => {
+        emit('customClick', event);
+      },
+    },
+    slots.default!()
+  );
+};
+MyButton.props = ['disabled'];
+MyButton.emits = ['customClick'];
+
+export default MyButton;
+```
+
+### 16. 点击修饰符
+
+```vue
+<template>
+  <!-- 添加按键修饰符让即使 Alt 或 Shift 被一同按下时也会触发 -->
+  <button @click.alt="click1" @click.shift>click1</button>
+  <!-- 添加按键修饰符让有且只有 Shift 被按下的时候才触发 -->
+  <button @click.shift.exact="click2">click2</button>
+  <!-- 添加按键修饰符让没有任何系统修饰符被按下的时候才触发 -->
+  <button @click.exact="click3">click3</button>
+</template>
+<script lang="ts" setup>
+const click1 = () => {
+  console.log('click1');
+};
+const click2 = () => {
+  console.log('click2');
+};
+const click3 = () => {
+  console.log('click3');
+};
+</script>
+```
+
