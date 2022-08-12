@@ -1109,3 +1109,75 @@ describe('should useLocalStorages', () => {
 })
 ```
 
+#### 18.测试 useMouse
+
+例子
+
+```vue
+<template>Mouse position is at: {{ x }}, {{ y }}</template>
+<script lang="ts" setup>
+import { onMounted, onUnmounted, ref } from 'vue';
+
+function useEventListener<T extends keyof HTMLElementEventMap>(
+  target: HTMLElement,
+  event: T,
+  callback: (this: HTMLElement, ev: HTMLElementEventMap[T]) => void
+) {
+  // 组件挂载时绑定事件
+  onMounted(() => {
+    target.addEventListener(event, callback);
+  });
+  // 组件卸载时移除事件
+  onUnmounted(() => {
+    target.removeEventListener(event, callback);
+  });
+}
+
+function useMouse() {
+  const x = ref(0);
+  const y = ref(0);
+
+  useEventListener(window, 'mousemove', event => {
+    x.value = event.pageX;
+    y.value = event.pageY;
+  });
+
+  return {
+    x,
+    y,
+  };
+}
+
+const { x, y } = useMouse();
+</script>
+<style></style>
+```
+
+测试
+
+```ts
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
+import useMouse from '@/components/useMouse.vue';
+
+describe('should useMouseMove', () => {
+  it('useMouseMove', async () => {
+    const wrapper = mount(useMouse);
+    expect(wrapper.html()).toBe('Mouse position is at: 0, 0');
+
+    const mousemove = new MouseEvent('mousemove', {
+      screenX: 10,
+      screenY: 20,
+      clientX: 10,
+      clientY: 20,
+    });
+
+    const res = dispatchEvent(mousemove);
+    await nextTick();
+    expect(res).toBeTruthy();
+    // res && expect(wrapper.html()).toBe('Mouse position is at: 10, 20');
+  });
+});
+```
+
