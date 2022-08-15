@@ -15,6 +15,7 @@ import useCustomElement from '@/components/useCustomElement.vue';
 import customRef from '@/components/customRef.vue';
 import VModels from '@/components/VModels.vue';
 import TreeComponent from '@/components/TreeComponent.vue';
+import RefFamilyMeals from '@/components/ref全家桶.vue';
 </script>
 
 <template>
@@ -35,4 +36,5 @@ import TreeComponent from '@/components/TreeComponent.vue';
   <customRef />
   <VModels />
   <TreeComponent />
+  <RefFamilyMeals />
 </template>
