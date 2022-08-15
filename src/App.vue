@@ -16,6 +16,7 @@ import customRef from '@/components/customRef.vue';
 import VModels from '@/components/VModels.vue';
 import TreeComponent from '@/components/TreeComponent.vue';
 import RefFamilyMeals from '@/components/ref全家桶.vue';
+import isNextTick from '@/components/nextTick.vue';
 </script>
 
 <template>
@@ -37,4 +38,5 @@ import RefFamilyMeals from '@/components/ref全家桶.vue';
   <VModels />
   <TreeComponent />
   <RefFamilyMeals />
+  <isNextTick />
 </template>
