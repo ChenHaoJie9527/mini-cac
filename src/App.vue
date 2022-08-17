@@ -17,10 +17,12 @@ import VModels from '@/components/VModels.vue';
 import TreeComponent from '@/components/TreeComponent.vue';
 import RefFamilyMeals from '@/components/ref全家桶.vue';
 import isNextTick from '@/components/nextTick.vue';
+import Icon from '@/components/Icon.vue';
 </script>
 
 <template>
   <div>Hello Vitest!</div>
+  <Icon :size="14" color="red">亮晶晶</Icon>
   <ButtonSlot>hello Vitest!</ButtonSlot>
   <isWatch />
   <isShallowRefVue />
